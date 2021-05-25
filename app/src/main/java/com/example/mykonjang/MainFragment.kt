@@ -20,13 +20,19 @@ class MainFragment : Fragment() {
     }
 
     private fun init() {
+        val fragment = requireActivity().supportFragmentManager.beginTransaction()
+        fragment.addToBackStack(null)
         binding!!.apply {
             mainText.setOnClickListener {
-
+                val showfragment = ShowFragment()
+                fragment.replace(R.id.framelayout, showfragment)
+                fragment.commit()
             }
 
             findBtn.setOnClickListener {
-
+                val findfragment = FindFragment()
+                fragment.replace(R.id.framelayout, findfragment)
+                fragment.commit()
             }
 
             userBtn.setOnClickListener {
