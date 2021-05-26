@@ -53,7 +53,7 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
         onCreate(db) // 다시 생성
     }
 
-    // 장학분류 Spinner 선택 함수
+    // 장학 분류 Spinner 선택 함수
     fun selectScholarType(item: Any): Boolean {
         val strsql = "select * from $TABLE_NAME where $PSCHOLARTYPE = $item;"
         val db = readableDatabase
@@ -67,6 +67,7 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
         return flag
     }
 
+    // 성적 Spinner 선택 함수
     fun selectGradeType(item: Any): Boolean {
         val strsql = "select * from $TABLE_NAME where $PGRADE = $item;"
         val db = readableDatabase

@@ -75,7 +75,7 @@ class FindFragment : Fragment() {
                         "선택 : " + gradeDiv.getItemAtPosition(position),
                         Toast.LENGTH_SHORT
                     ).show();
-                    myDBHelper.selectGradeType(scholarDiv.getItemAtPosition(position))
+                    myDBHelper.selectGradeType(gradeDiv.getItemAtPosition(position))
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
