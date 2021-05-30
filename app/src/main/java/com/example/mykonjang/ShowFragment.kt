@@ -30,6 +30,12 @@ class ShowFragment : Fragment() {
                 fragment.replace(R.id.framelayout, mainfragment)
                 fragment.commit()
             }
+
+            imageView.setOnClickListener {
+                val addfragment = AddFragment()
+                fragment.replace(R.id.framelayout, addfragment)
+                fragment.commit()
+            }
         }
     }
 

@@ -27,6 +27,7 @@ class FindFragment : Fragment() {
     }
 
     private fun init() {
+        myDBHelper = MyDBHelper(this.context)
         binding!!.apply{
             scholarDiv?.adapter = this@FindFragment.context?.let {
                 ArrayAdapter(
@@ -84,7 +85,14 @@ class FindFragment : Fragment() {
 
             findBtn.setOnClickListener {
                 val scholarName = findScholar.text.toString()
-//                val scholarDiv = scholarDiv.
+                val result = myDBHelper.findScholar(scholarName)
+                if (result) {
+                    Toast.makeText(this@FindFragment.context, "RECORD FOUND", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    Toast.makeText(this@FindFragment.context, "NO MATCH FOUND", Toast.LENGTH_SHORT)
+                        .show()
+                }
             }
         }
     }
