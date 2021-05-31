@@ -247,7 +247,7 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
 
     // 장학 분류 Spinner 선택 함수
     fun selectScholarType(item: Any): Boolean {
-        val strsql = "select * from $TABLE_NAME where $PSCHOLARTYPE = $item;"
+        val strsql = "select * from $TABLE_NAME where $PSCHOLARTYPE = '$item';"
         val db = readableDatabase
         val cursor = db.rawQuery(strsql, null)
         val flag = cursor.count != 0
