@@ -7,11 +7,18 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.graphics.Color
 import android.view.Gravity
+import android.view.View
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
+    var data: ArrayList<ScholarData> = ArrayList()
+    lateinit var recyclerView: RecyclerView
+    lateinit var adapter: FindAdapter
+
     companion object { // 변수 선언
         val DB_NAME = "scholar.db" // db 이름
         val DB_VERSION = 1 // version 정보
@@ -150,67 +157,28 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
     /* FindFragment 수정 필요!!! */
     fun showFindRecord(cursor: Cursor) {
         cursor.moveToFirst()
-        val attrcount = cursor.columnCount // 개수
         val activity = context as MainActivity
         val activity2 =
-            activity?.supportFragmentManager.findFragmentById(R.id.framelayout) as AddFragment
-        activity2.binding?.tableLayout?.removeAllViewsInLayout() // FindFragment의 RecyclerView로 변경
+            activity?.supportFragmentManager.findFragmentById(R.id.framelayout) as FindFragment
+        activity2.binding?.RecyclerView?.removeAllViewsInLayout()
 
-        // 타이틀 만들기 (동적 생성이기 때문에 크기를 줘야됨)
-        val tablerow = TableRow(activity)
-        val rowParam = TableRow.LayoutParams(
-            TableRow.LayoutParams.MATCH_PARENT,
-            TableLayout.LayoutParams.WRAP_CONTENT
-        )
-        tablerow.layoutParams = rowParam
+        recyclerView = activity2.binding?.RecyclerView!!
+        recyclerView.layoutManager = LinearLayoutManager(activity2.context, LinearLayoutManager.VERTICAL, false)
+        adapter = FindAdapter(data)
 
-        val viewParam = TableRow.LayoutParams(0, 100, 1f)
-        for (i in 0 until attrcount) { // 속성값 설정
-            val textView = TextView(activity) // textview 생성
-            textView.layoutParams = viewParam
-            textView.text = cursor.getColumnName(i)
-            textView.setBackgroundColor(Color.LTGRAY)
-            textView.textSize = 15.0f
-            textView.gravity = Gravity.CENTER
-            tablerow.addView(textView)
+        /* 데이터를 가져와서 띄워야 함 */
+
+        adapter.itemClickListener = object : FindAdapter.OnItemClickListener {
+            override fun OnItemClick(
+                holder: FindAdapter.ViewHolder,
+                view: View,
+                data: ScholarData,
+                position: Int
+            ) {
+                // 팝업창?
+            }
         }
-        activity2.binding?.tableLayout?.addView(tablerow) // xml에 row 추가됨
-
-        if (cursor.count == 0) return // 반환할 데이터가 없으면 종료 (없으면 앱 종료됨)
-
-        // 레코드 추가하기
-        do {
-            val row = TableRow(activity)
-            row.layoutParams = rowParam
-
-            // row를 선택할 때마다 plainText에 뜸
-            row.setOnClickListener {
-                for (i in 0 until attrcount) {
-                    val textView = row.getChildAt(i) as TextView // TextView 객체
-                    when (textView.tag) {
-                        0 -> activity2.binding?.pId?.setText(textView.text)
-                        1 -> activity2.binding?.pScholarName?.setText(textView.text)
-                        2 -> activity2.binding?.pScholarType?.setText(textView.text)
-                        3 -> activity2.binding?.pScholarList?.setText(textView.text)
-                        4 -> activity2.binding?.pLike?.isChecked =
-                            textView.text.toString().toInt() == 1
-                        5 -> activity2.binding?.pGrade?.setText(textView.text)
-                        6 -> activity2.binding?.pMonth?.setText(textView.text)
-                    }
-                }
-            }
-
-            for (i in 0 until attrcount) { // 속성값 설정
-                val textView = TextView(activity) // textview 생성
-                textView.tag = i // 태그 값 (id값 식별하기 위한 변수)
-                textView.layoutParams = viewParam
-                textView.text = cursor.getString(i)
-                textView.textSize = 13.0f
-                textView.gravity = Gravity.CENTER
-                row.addView(textView)
-            }
-            activity2.binding?.tableLayout?.addView(row) // xml에 row 추가됨
-        } while (cursor.moveToNext()) // moveToNext : 커서의 다음으로 이동 -> 다음에 읽을게 있으면
+        recyclerView.adapter = adapter
     }
 
     /* 데이터 표시 */
@@ -252,7 +220,7 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
         val cursor = db.rawQuery(strsql, null)
         val flag = cursor.count != 0
 
-//        showFindRecord(cursor)
+        showFindRecord(cursor)
         cursor.close()
         db.close()
 
@@ -261,12 +229,12 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
 
     // 성적 Spinner 선택 함수
     fun selectGradeType(item: Any): Boolean {
-        val strsql = "select * from $TABLE_NAME where $PGRADE = $item;"
+        val strsql = "select * from $TABLE_NAME where $PGRADE <= $item;"
         val db = readableDatabase
         val cursor = db.rawQuery(strsql, null)
         val flag = cursor.count != 0
 
-//        showFindRecord(cursor)
+        showFindRecord(cursor)
         cursor.close()
         db.close()
 
@@ -280,7 +248,7 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
         val cursor = db.rawQuery(strsql, null)
         val flag = cursor.count != 0
 
-//        showFindRecord(cursor)
+        showFindRecord(cursor)
         cursor.close()
         db.close()
 
