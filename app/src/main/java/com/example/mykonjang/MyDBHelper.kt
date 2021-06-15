@@ -157,13 +157,22 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
     /* FindFragment 수정 필요!!! */
     fun showFindRecord(cursor: Cursor) {
         cursor.moveToFirst()
+        val attrcount = cursor.columnCount // 개수
         val activity = context as MainActivity
         val activity2 =
             activity?.supportFragmentManager.findFragmentById(R.id.framelayout) as FindFragment
         activity2.binding?.RecyclerView?.removeAllViewsInLayout()
 
         recyclerView = activity2.binding?.RecyclerView!!
-        recyclerView.layoutManager = LinearLayoutManager(activity2.context, LinearLayoutManager.VERTICAL, false)
+        recyclerView.layoutManager =
+            LinearLayoutManager(activity2.context, LinearLayoutManager.VERTICAL, false)
+
+        if (cursor.count == 0) return
+
+        for (i in 0 until attrcount) {
+            cursor.getString(i)
+        }
+
         adapter = FindAdapter(data)
 
         /* 데이터를 가져와서 띄워야 함 */
