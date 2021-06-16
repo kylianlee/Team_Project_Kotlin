@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.graphics.Color
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.TableLayout
@@ -15,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
-    var data: ArrayList<ScholarData> = ArrayList()
+    var data = arrayListOf<ScholarData>()
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: FindAdapter
 
@@ -144,6 +145,7 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
             for (i in 0 until attrcount) { // 속성값 설정
                 val textView = TextView(activity) // textview 생성
                 textView.tag = i // 태그 값 (id값 식별하기 위한 변수)
+                Log.i("tagtagtag : ", i.toString())
                 textView.layoutParams = viewParam
                 textView.text = cursor.getString(i)
                 textView.textSize = 13.0f
@@ -171,6 +173,7 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
 
         for (i in 0 until attrcount) {
             cursor.getString(i)
+            // data에 추가
         }
 
         adapter = FindAdapter(data)
@@ -188,6 +191,7 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
             }
         }
         recyclerView.adapter = adapter
+        adapter.notifyDataSetChanged()
     }
 
     /* 데이터 표시 */
@@ -238,7 +242,7 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
 
     // 성적 Spinner 선택 함수
     fun selectGradeType(item: Any): Boolean {
-        val strsql = "select * from $TABLE_NAME where $PGRADE <= $item;"
+        val strsql = "select * from $TABLE_NAME where $PGRADE >= $item;"
         val db = readableDatabase
         val cursor = db.rawQuery(strsql, null)
         val flag = cursor.count != 0

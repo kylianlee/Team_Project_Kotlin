@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
@@ -16,7 +15,6 @@ class FindAdapter (private var items: MutableList<ScholarData>): RecyclerView.Ad
     var itemClickListener: OnItemClickListener? = null
 
     inner class ViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView!!) {
-        var findRow: LinearLayout = itemView!!.findViewById(R.id.findRow)
         var findText: TextView = itemView!!.findViewById(R.id.findText)
         var findCheckBox: CheckBox = itemView!!.findViewById(R.id.findCheckBox)
 
