@@ -73,8 +73,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="7"
-                    android:hint="장학금을 검색해주세요"
-                    android:textColorHint="@color/black" />
+                    android:hint="장학금을 검색해주세요" />
 
                 <Button
                     android:id="@+id/findBtn"

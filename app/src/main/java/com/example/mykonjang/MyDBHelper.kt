@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView
 class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: FindAdapter
-    lateinit var scholar: ScholarData
 
     companion object { // 변수 선언
         val DB_NAME = "scholar.db" // db 이름
@@ -156,46 +155,38 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
         } while (cursor.moveToNext()) // moveToNext : 커서의 다음으로 이동 -> 다음에 읽을게 있으면
     }
 
-    /* FindFragment 수정 필요!!! */
+    /* FindFragment */
     fun showFindRecord(cursor: Cursor) {
-        var data = mutableListOf<String>()
         var scData = mutableListOf<ScholarData>()
         cursor.moveToFirst()
         val attrcount = cursor.columnCount // 개수
         val activity = context as MainActivity
         val activity2 =
             activity?.supportFragmentManager.findFragmentById(R.id.framelayout) as FindFragment
-        activity2.binding?.RecyclerView?.removeAllViewsInLayout()
 
-        recyclerView = activity2.binding?.RecyclerView!!
-        recyclerView.layoutManager =
-            LinearLayoutManager(activity2.context, LinearLayoutManager.VERTICAL, false)
-
-        if (cursor.count == 0) return
-
-        for (i in 0 until attrcount) {
-            // data에 추가
-            if (i % 7 == 6) {
-                scData.apply {
-                    add(
-                        ScholarData(
-                            cursor.getString(i-6).toInt(),
-                            cursor.getString(i-5),
-                            cursor.getString(i-4),
-                            cursor.getString(i-3),
-                            cursor.getString(i-2).toBoolean(),
-                            cursor.getString(i-1).toFloat(),
-                            cursor.getString(i).toInt()
-                        )
-                    )
+        if (cursor.count != 0) {
+            do {
+                for (i in 0 until attrcount) {
+                    if (i % 7 == 6) {
+                        scData.apply {
+                            add(
+                                ScholarData(
+                                    cursor.getString(i - 6).toInt(),
+                                    cursor.getString(i - 5),
+                                    cursor.getString(i - 4),
+                                    cursor.getString(i - 3),
+                                    cursor.getString(i - 2).toBoolean(),
+                                    cursor.getString(i - 1).toFloat(),
+                                    cursor.getString(i).toInt()
+                                )
+                            )
+                        }
+                    }
                 }
-            }
-//            Log.i("scData apply : ", scData[i].toString())
-//            data.add(cursor.getString(i))
-            adapter = FindAdapter(scData)
+            } while (cursor.moveToNext())
         }
 
-        /* 데이터를 가져와서 띄워야 함 */
+        adapter = FindAdapter(scData)
 
         adapter.itemClickListener = object : FindAdapter.OnItemClickListener {
             override fun OnItemClick(
@@ -207,7 +198,11 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
                 // 팝업창?
             }
         }
+
+        recyclerView = activity2.binding?.RecyclerView!!
         recyclerView.adapter = adapter
+        recyclerView.layoutManager =
+            LinearLayoutManager(activity2.context, LinearLayoutManager.VERTICAL, false)
         adapter.notifyDataSetChanged()
     }
 
@@ -244,29 +239,13 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
     }
 
     // 장학 분류 Spinner 선택 함수
-    fun selectScholarType(item: Any): Boolean {
+    fun selectScholarType(scholarItem: Any, gradeItem: Any): Boolean {
         var strsql = ""
-        Log.i("itemPP : ", item.toString())
-        if (item == "전체") {
-            strsql = "select * from $TABLE_NAME;"
-        } else {
-            strsql = "select * from $TABLE_NAME where $PSCHOLARTYPE = '$item';"
-        }
+        if (scholarItem == "전체")
+            strsql = "select * from $TABLE_NAME where $PGRADE >= '$gradeItem';"
+        else
+            strsql = "select * from $TABLE_NAME where $PSCHOLARTYPE = '$scholarItem' and $PGRADE >= '$gradeItem';"
 
-        val db = readableDatabase
-        val cursor = db.rawQuery(strsql, null)
-        val flag = cursor.count != 0
-
-        showFindRecord(cursor)
-        cursor.close()
-        db.close()
-
-        return flag
-    }
-
-    // 성적 Spinner 선택 함수
-    fun selectGradeType(item: Any): Boolean {
-        val strsql = "select * from $TABLE_NAME where $PGRADE >= $item;"
         val db = readableDatabase
         val cursor = db.rawQuery(strsql, null)
         val flag = cursor.count != 0
@@ -280,7 +259,7 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
 
     // 장학 이름으로 찾음
     fun findScholar(name: String): Boolean {
-        val strsql = "select * from $TABLE_NAME where $PSCHOLARNAME='$name';"
+        val strsql = "select * from $TABLE_NAME where $PSCHOLARNAME like '%$name%';"
         val db = readableDatabase
         val cursor = db.rawQuery(strsql, null)
         val flag = cursor.count != 0

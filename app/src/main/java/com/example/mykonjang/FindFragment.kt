@@ -27,6 +27,8 @@ class FindFragment : Fragment() {
     }
 
     private fun init() {
+        var scholarSelect = ""
+        var gradeSelect = ""
         myDBHelper = MyDBHelper(this.context)
         binding!!.apply{
             scholarDiv?.adapter = this@FindFragment.context?.let {
@@ -44,12 +46,13 @@ class FindFragment : Fragment() {
                     position: Int,
                     id: Long
                 ) {
+                    scholarSelect = scholarDiv.getItemAtPosition(position) as String
+                    myDBHelper.selectScholarType(scholarDiv.getItemAtPosition(position), gradeSelect)
                     Toast.makeText(
                         this@FindFragment.context,
                         "선택 : " + scholarDiv.getItemAtPosition(position),
                         Toast.LENGTH_SHORT
                     ).show();
-                    myDBHelper.selectScholarType(scholarDiv.getItemAtPosition(position))
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -71,12 +74,13 @@ class FindFragment : Fragment() {
                     position: Int,
                     id: Long
                 ) {
+                    gradeSelect = gradeDiv.getItemAtPosition(position) as String
+                    myDBHelper.selectScholarType(scholarSelect, gradeDiv.getItemAtPosition(position))
                     Toast.makeText(
                         this@FindFragment.context,
                         "선택 : " + gradeDiv.getItemAtPosition(position),
                         Toast.LENGTH_SHORT
                     ).show();
-                    myDBHelper.selectGradeType(gradeDiv.getItemAtPosition(position))
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
