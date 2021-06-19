@@ -16,9 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
-    var data = arrayListOf<ScholarData>()
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: FindAdapter
+    lateinit var scholar: ScholarData
 
     companion object { // 변수 선언
         val DB_NAME = "scholar.db" // db 이름
@@ -158,6 +158,8 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
 
     /* FindFragment 수정 필요!!! */
     fun showFindRecord(cursor: Cursor) {
+        var data = mutableListOf<String>()
+        var scData = mutableListOf<ScholarData>()
         cursor.moveToFirst()
         val attrcount = cursor.columnCount // 개수
         val activity = context as MainActivity
@@ -172,11 +174,26 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
         if (cursor.count == 0) return
 
         for (i in 0 until attrcount) {
-            cursor.getString(i)
             // data에 추가
+            if (i % 7 == 6) {
+                scData.apply {
+                    add(
+                        ScholarData(
+                            cursor.getString(i-6).toInt(),
+                            cursor.getString(i-5),
+                            cursor.getString(i-4),
+                            cursor.getString(i-3),
+                            cursor.getString(i-2).toBoolean(),
+                            cursor.getString(i-1).toFloat(),
+                            cursor.getString(i).toInt()
+                        )
+                    )
+                }
+            }
+//            Log.i("scData apply : ", scData[i].toString())
+//            data.add(cursor.getString(i))
+            adapter = FindAdapter(scData)
         }
-
-        adapter = FindAdapter(data)
 
         /* 데이터를 가져와서 띄워야 함 */
 
@@ -228,7 +245,14 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
 
     // 장학 분류 Spinner 선택 함수
     fun selectScholarType(item: Any): Boolean {
-        val strsql = "select * from $TABLE_NAME where $PSCHOLARTYPE = '$item';"
+        var strsql = ""
+        Log.i("itemPP : ", item.toString())
+        if (item == "전체") {
+            strsql = "select * from $TABLE_NAME;"
+        } else {
+            strsql = "select * from $TABLE_NAME where $PSCHOLARTYPE = '$item';"
+        }
+
         val db = readableDatabase
         val cursor = db.rawQuery(strsql, null)
         val flag = cursor.count != 0

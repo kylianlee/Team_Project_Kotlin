@@ -33,7 +33,8 @@ class AddFragment : Fragment() {
         binding?.apply {
             pScholarName.text.clear()
             pScholarType.text.clear()
-            pScholarType.text.clear()
+            pScholarList.text.clear()
+            !pLike.isChecked
             pGrade.text.clear()
             pMonth.text.clear()
         }
