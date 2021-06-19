@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import com.example.mykonjang.databinding.ActivityMainBinding
+import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -18,11 +19,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-//        initDB()
+        initDB()
         init()
     }
 
-    /*
+
     private fun initDB() {
         val dbfile = getDatabasePath("scholar.db")
         // dbfile이 존재하는지 확인
@@ -42,7 +43,6 @@ class MainActivity : AppCompatActivity() {
             output.close()
         }
     }
-    */
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun init() {
