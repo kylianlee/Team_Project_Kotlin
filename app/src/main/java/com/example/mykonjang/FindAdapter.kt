@@ -19,7 +19,7 @@ class FindAdapter (private var items: MutableList<ScholarData>): RecyclerView.Ad
         var findCheckBox: CheckBox = itemView!!.findViewById(R.id.findCheckBox)
 
         init {
-            itemView?.setOnClickListener {
+            findCheckBox.setOnClickListener {
                 itemClickListener?.OnItemClick(this, it, items[adapterPosition], adapterPosition)
             }
         }
@@ -32,7 +32,7 @@ class FindAdapter (private var items: MutableList<ScholarData>): RecyclerView.Ad
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.findText.text = items[position].scholarName
-        holder.findCheckBox.isChecked = items[position].like
+        holder.findCheckBox.isChecked = items[position].like == true
     }
 
     override fun getItemCount(): Int {

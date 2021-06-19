@@ -39,6 +39,7 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
         values.put(PSCHOLARTYPE, scholar.scholarType)
         values.put(PSCHOLARLIST, scholar.scholarList)
         values.put(PLIKE, scholar.like)
+        Log.i("scholarLike", scholar.like.toString())
         values.put(PGRADE, scholar.grade)
         values.put(PSCHOLARMONTH, scholar.scholarMonth)
 
@@ -134,7 +135,7 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
                         2 -> activity2.binding?.pScholarType?.setText(textView.text)
                         3 -> activity2.binding?.pScholarList?.setText(textView.text)
                         4 -> activity2.binding?.pLike?.isChecked =
-                            textView.text.toString().toInt() == 1
+                            textView.text.toString() == "1"
                         5 -> activity2.binding?.pGrade?.setText(textView.text)
                         6 -> activity2.binding?.pMonth?.setText(textView.text)
                     }
@@ -144,7 +145,6 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
             for (i in 0 until attrcount) { // 속성값 설정
                 val textView = TextView(activity) // textview 생성
                 textView.tag = i // 태그 값 (id값 식별하기 위한 변수)
-                Log.i("tagtagtag : ", i.toString())
                 textView.layoutParams = viewParam
                 textView.text = cursor.getString(i)
                 textView.textSize = 13.0f
@@ -168,6 +168,8 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
             do {
                 for (i in 0 until attrcount) {
                     if (i % 7 == 6) {
+                        var tf = false
+                        tf = cursor.getString(i - 2) == "1"
                         scData.apply {
                             add(
                                 ScholarData(
@@ -175,7 +177,7 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
                                     cursor.getString(i - 5),
                                     cursor.getString(i - 4),
                                     cursor.getString(i - 3),
-                                    cursor.getString(i - 2).toBoolean(),
+                                    tf,
                                     cursor.getString(i - 1).toFloat(),
                                     cursor.getString(i).toInt()
                                 )
@@ -195,7 +197,15 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
                 data: ScholarData,
                 position: Int
             ) {
-                // 팝업창?
+                if (holder.findCheckBox.isChecked) {
+                    data.like = true
+                    !holder.findCheckBox.isChecked
+                } else {
+                    data.like = false
+                    holder.findCheckBox.isChecked
+                }
+                Log.i("data.like : ", data.like.toString())
+                updateProduct(data)
             }
         }
 
@@ -244,7 +254,8 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
         if (scholarItem == "전체")
             strsql = "select * from $TABLE_NAME where $PGRADE >= '$gradeItem';"
         else
-            strsql = "select * from $TABLE_NAME where $PSCHOLARTYPE = '$scholarItem' and $PGRADE >= '$gradeItem';"
+            strsql =
+                "select * from $TABLE_NAME where $PSCHOLARTYPE = '$scholarItem' and $PGRADE >= '$gradeItem';"
 
         val db = readableDatabase
         val cursor = db.rawQuery(strsql, null)
