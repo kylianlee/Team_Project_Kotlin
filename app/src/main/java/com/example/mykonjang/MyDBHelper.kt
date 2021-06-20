@@ -6,7 +6,6 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.graphics.Color
-import android.text.Editable
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -19,23 +18,23 @@ import com.example.mykonjang.databinding.FragmentScholarBinding
 
 
 class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
-    lateinit var recyclerView: RecyclerView
-    lateinit var adapter: FindAdapter
-    lateinit var mainMonthAdapter: MainMonthAdapter
-    lateinit var mainListAdapter: MainListAdapter
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: FindAdapter
+    private lateinit var mainMonthAdapter: MainMonthAdapter
+    private lateinit var mainListAdapter: MainListAdapter
     var binding: FragmentScholarBinding? = null
 
     companion object { // 변수 선언
-        val DB_NAME = "scholar.db" // db 이름
-        val DB_VERSION = 1 // version 정보
-        val TABLE_NAME = "scholardata" // 테이블 네임
-        val PID = "PID"
-        val PSCHOLARNAME = "SCHOLARNAME"
-        val PSCHOLARTYPE = "SCHOLARTYPE"
-        val PSCHOLARLIST = "SCHOLARLIST"
-        val PLIKE = "LIKE"
-        val PGRADE = "GRADE"
-        val PSCHOLARMONTH = "SCHOLARMONTH"
+        const val DB_NAME = "scholar.db" // db 이름
+        const val DB_VERSION = 1 // version 정보
+        const val TABLE_NAME = "scholardata" // 테이블 네임
+        const val PID = "PID"
+        const val PSCHOLARNAME = "SCHOLARNAME"
+        const val PSCHOLARTYPE = "SCHOLARTYPE"
+        const val PSCHOLARLIST = "SCHOLARLIST"
+        const val PLIKE = "LIKE"
+        const val PGRADE = "GRADE"
+        const val PSCHOLARMONTH = "SCHOLARMONTH"
     }
 
     /* AddFragment 데이터 추가 함수 */
@@ -96,12 +95,12 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
     }
 
     /* AddFragment */
-    fun showAddRecord(cursor: Cursor) {
+    private fun showAddRecord(cursor: Cursor) {
         cursor.moveToFirst()
         val attrcount = cursor.columnCount // 개수
         val activity = context as MainActivity
         val activity2 =
-            activity?.supportFragmentManager.findFragmentById(R.id.framelayout) as AddFragment
+            activity.supportFragmentManager.findFragmentById(R.id.framelayout) as AddFragment
         activity2.binding?.tableLayout?.removeAllViewsInLayout()
 
         // 타이틀 만들기 (동적 생성이기 때문에 크기를 줘야됨)
@@ -162,20 +161,20 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
     }
 
     /* FindFragment */
-    fun showFindRecord(cursor: Cursor) {
-        var scData = mutableListOf<ScholarData>()
+    private fun showFindRecord(cursor: Cursor) {
+        val scData = mutableListOf<ScholarData>()
         cursor.moveToFirst()
         val attrcount = cursor.columnCount // 개수
         val activity = context as MainActivity
         val activity2 =
-            activity?.supportFragmentManager.findFragmentById(R.id.framelayout) as FindFragment
+            activity.supportFragmentManager.findFragmentById(R.id.framelayout) as FindFragment
+        val activity3 = activity.supportFragmentManager.beginTransaction().addToBackStack(null)
 
         if (cursor.count != 0) {
             do {
                 for (i in 0 until attrcount) {
                     if (i % 7 == 6) {
-                        var tf = false
-                        tf = cursor.getString(i - 2) == "1"
+                        val tf: Boolean = cursor.getString(i - 2) == "1"
                         scData.apply {
                             add(
                                 ScholarData(
@@ -210,8 +209,22 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
                     data.like = false
                     holder.findCheckBox.isChecked
                 }
-                Log.i("data.like : ", data.like.toString())
                 updateProduct(data)
+            }
+        }
+
+        adapter.itemClickListener2 = object : FindAdapter.OnItemClickListener {
+            override fun OnItemClick(
+                holder: FindAdapter.ViewHolder,
+                view: View,
+                data: ScholarData,
+                position: Int
+            ) {
+                binding.apply {
+                    val scholarFragment = ScholarFragment(data.scholarName)
+                    activity3.replace(R.id.framelayout, scholarFragment)
+                    activity3.commit()
+                }
             }
         }
 
@@ -236,7 +249,7 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
     // DB가 처음 생성될 때
     override fun onCreate(db: SQLiteDatabase?) {
         // 테이블 생성
-        val create_table = "create table if not exists $TABLE_NAME(" +
+        val createTable = "create table if not exists $TABLE_NAME(" +
                 "$PID integer primary key autoincrement, " + // autoincrement : 자동으로 증가되는 값
                 "$PSCHOLARNAME text, " +
                 "$PSCHOLARTYPE text, " +
@@ -244,24 +257,22 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
                 "$PLIKE boolean, " +
                 "$PGRADE float, " +
                 "$PSCHOLARMONTH text);"
-        db!!.execSQL(create_table) // null이 아니면 테이블 생성
+        db!!.execSQL(createTable) // null이 아니면 테이블 생성
     }
 
     // DB 버전이 바뀌었을 때
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        val drop_table = "drop table if exists $TABLE_NAME;" // 테이블 삭제
-        db!!.execSQL(drop_table) // null이 아니면 테이블 삭제
+        val dropTable = "drop table if exists $TABLE_NAME;" // 테이블 삭제
+        db!!.execSQL(dropTable) // null이 아니면 테이블 삭제
         onCreate(db) // 다시 생성
     }
 
     // 장학 분류 Spinner 선택 함수
     fun selectScholarType(scholarItem: Any, gradeItem: Any): Boolean {
-        var strsql = ""
-        if (scholarItem == "전체")
-            strsql = "select * from $TABLE_NAME where $PGRADE >= '$gradeItem';"
+        val strsql: String = if (scholarItem == "전체")
+            "select * from $TABLE_NAME where $PGRADE >= '$gradeItem';"
         else
-            strsql =
-                "select * from $TABLE_NAME where $PSCHOLARTYPE = '$scholarItem' and $PGRADE >= '$gradeItem';"
+            "select * from $TABLE_NAME where $PSCHOLARTYPE = '$scholarItem' and $PGRADE >= '$gradeItem';"
 
         val db = readableDatabase
         val cursor = db.rawQuery(strsql, null)
@@ -300,10 +311,10 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
     }
 
     /* MainFragment 월별 리스트 RecyclerView */
-    fun showMainMonthList(cursor: Cursor, month: String) {
-        var scData = mutableListOf<ScholarData>()
+    private fun showMainMonthList(cursor: Cursor, month: String) {
+        val scData = mutableListOf<ScholarData>()
         cursor.moveToFirst()
-        val attrcount = cursor.columnCount // 개수
+        val attrCount = cursor.columnCount // 개수
         val activity = context as MainActivity
         val activity2 =
             activity.supportFragmentManager.findFragmentById(R.id.framelayout) as MainFragment
@@ -311,12 +322,11 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
 
         if (cursor.count != 0) {
             do {
-                for (i in 0 until attrcount) {
+                for (i in 0 until attrCount) {
                     if (i % 7 == 6) {
-                        var tmp = cursor.getString(i).split(".")
+                        val tmp = cursor.getString(i).split(".")
                         if (tmp[0] == month) {
-                            var tf = false
-                            tf = cursor.getString(i - 2) == "1"
+                            val tf: Boolean = cursor.getString(i - 2) == "1"
                             scData.apply {
                                 add(
                                     ScholarData(
@@ -346,7 +356,7 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
                 position: Int
             ) {
                 binding.apply {
-                    val scholarFragment = ScholarFragment()
+                    val scholarFragment = ScholarFragment(data.scholarName)
                     activity3.replace(R.id.framelayout, scholarFragment)
                     activity3.commit()
                 }
@@ -372,21 +382,20 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
     }
 
     /* MainFragment 장학 리스트 RecyclerView */
-    fun showMainList(cursor: Cursor, month: String, day: String) {
-        var scData = mutableListOf<ScholarData>()
+    private fun showMainList(cursor: Cursor, month: String, day: String) {
+        val scData = mutableListOf<ScholarData>()
         cursor.moveToFirst()
         val attrcount = cursor.columnCount // 개수
         val activity = context as MainActivity
         val activity2 =
-            activity?.supportFragmentManager.findFragmentById(R.id.framelayout) as MainFragment
+            activity.supportFragmentManager.findFragmentById(R.id.framelayout) as MainFragment
 
         if (cursor.count != 0) {
             do {
                 for (i in 0 until attrcount) {
                     if (i % 7 == 6) {
-                        var tmp = cursor.getString(i).split(".")
-                        var tf = false
-                        tf = cursor.getString(i - 2) == "1"
+                        val tmp = cursor.getString(i).split(".")
+                        val tf: Boolean = cursor.getString(i - 2) == "1"
                         if (tmp[0] == month && tmp[1] == day && tf) {
                             scData.apply {
                                 add(
@@ -427,29 +436,29 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
         db.close()
     }
 
-    fun showScholarRecord(cursor: Cursor) {
+    private fun showScholarRecord(cursor: Cursor) {
         cursor.moveToFirst()
         val attrcount = cursor.columnCount // 개수
         val activity = context as MainActivity
         val activity2 =
-            activity?.supportFragmentManager.findFragmentById(R.id.framelayout) as ScholarFragment
+            activity.supportFragmentManager.findFragmentById(R.id.framelayout) as ScholarFragment
 
         if (cursor.count != 0) {
             do {
                 for (i in 0 until attrcount) {
-                    if (i % 7 == 6) {
-                        var tf = false
-                        val textView = TextView(activity) // textview 생성
-                        tf = cursor.getString(i - 2) == "1"
-                        textView.textSize = 13.0f
-                        textView.gravity = Gravity.CENTER
-                        activity2.binding?.pId?.text = cursor.getString(i-6).toInt() as Editable
-                        activity2.binding?.pScholarName?.text = cursor.getString(i-5) as Editable
-                        activity2.binding?.pScholarType?.text = cursor.getString(i-4) as Editable
-                        activity2.binding?.pScholarList?.text = cursor.getString(i-3) as Editable
-                        activity2.binding?.pLike?.text = tf as Editable
-                        activity2.binding?.pGrade?.text = cursor.getString(i-1).toFloat() as Editable
-                        activity2.binding?.pMonth?.text = cursor.getString(i) as Editable
+                    var tf: Boolean
+                    val textView = TextView(activity) // textview 생성
+                    textView.text = cursor.getString(i)
+                    when (i) {
+                        1 -> activity2.binding?.pScholarName?.setText(cursor.getString(i))
+                        2 -> activity2.binding?.pScholarType?.setText(cursor.getString(i))
+                        3 -> activity2.binding?.pScholarList?.setText(cursor.getString(i))
+                        4 -> {
+                            tf = cursor.getString(i) == "1"
+                            activity2.binding?.pLike?.isChecked = tf
+                        }
+                        5 -> activity2.binding?.pGrade?.setText(cursor.getString(i))
+                        6 -> activity2.binding?.pMonth?.setText(cursor.getString(i))
                     }
                 }
             } while (cursor.moveToNext())

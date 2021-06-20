@@ -59,7 +59,6 @@ class MainFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.N)
     private fun init() {
         val cal = Calendar.getInstance()
-        val month = (cal.get(Calendar.MONTH) + 1).toString()
         val fragment = requireActivity().supportFragmentManager.beginTransaction()
 
         myDBHelper = MyDBHelper(this.context)
@@ -101,9 +100,8 @@ class MainFragment : Fragment() {
                 }
             }
 
-            monthText.text = month + "월 장학 목록"
-
             calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
+                monthText.text = (month+1).toString() + "월 장학 목록"
                 selectMonth = month + 1
                 selectDay = dayOfMonth
                 getMonthRecord(selectMonth)

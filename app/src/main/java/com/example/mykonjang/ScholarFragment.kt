@@ -7,9 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.mykonjang.databinding.FragmentScholarBinding
 
-class ScholarFragment : Fragment() {
+class ScholarFragment(scholarName: String) : Fragment() {
     var binding: FragmentScholarBinding? = null
     lateinit var myDBHelper: MyDBHelper
+    var scholar = scholarName
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -17,7 +18,12 @@ class ScholarFragment : Fragment() {
     ): View? {
         binding = FragmentScholarBinding.inflate(layoutInflater, container, false)
         init()
+        getRecord(scholar)
         return binding!!.root
+    }
+
+    fun getRecord(scholarName: String) {
+        myDBHelper.getScholarRecord(scholarName)
     }
 
     fun init() {
