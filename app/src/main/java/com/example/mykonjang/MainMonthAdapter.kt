@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 
 class MainMonthAdapter (private var items: MutableList<ScholarData>): RecyclerView.Adapter<MainMonthAdapter.ViewHolder> () {
     interface OnItemClickListener {
-        fun OnItemClick(holder: MainMonthAdapter.ViewHolder, view: View, data: ScholarData, position: Int)
+        fun OnItemClick(holder: ViewHolder, view: View, data: ScholarData, position: Int)
     }
 
-    var itemClickListener: MainMonthAdapter.OnItemClickListener? = null
+    var itemClickListener: OnItemClickListener? = null
 
     inner class ViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView!!) {
         var monthText: TextView = itemView!!.findViewById(R.id.scholarMonth)

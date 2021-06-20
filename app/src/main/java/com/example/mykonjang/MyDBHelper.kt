@@ -15,6 +15,7 @@ import android.widget.TableRow
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mykonjang.databinding.FragmentScholarBinding
 
 
 class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
@@ -22,6 +23,7 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
     lateinit var adapter: FindAdapter
     lateinit var mainMonthAdapter: MainMonthAdapter
     lateinit var mainListAdapter: MainListAdapter
+    var binding: FragmentScholarBinding? = null
 
     companion object { // 변수 선언
         val DB_NAME = "scholar.db" // db 이름
@@ -304,7 +306,8 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
         val attrcount = cursor.columnCount // 개수
         val activity = context as MainActivity
         val activity2 =
-            activity?.supportFragmentManager.findFragmentById(R.id.framelayout) as MainFragment
+            activity.supportFragmentManager.findFragmentById(R.id.framelayout) as MainFragment
+        val activity3 = activity.supportFragmentManager.beginTransaction().addToBackStack(null)
 
         if (cursor.count != 0) {
             do {
@@ -342,11 +345,11 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
                 data: ScholarData,
                 position: Int
             ) {
-//                val fragment = requireActivity().supportFragmentManager.beginTransaction()
-//                fragment.addToBackStack(null)
-//                val findfragment = ScholarFragment()
-//                fragment.replace(R.id.framelayout, findfragment)
-//                fragment.commit()
+                binding.apply {
+                    val scholarFragment = ScholarFragment()
+                    activity3.replace(R.id.framelayout, scholarFragment)
+                    activity3.commit()
+                }
             }
         }
 
