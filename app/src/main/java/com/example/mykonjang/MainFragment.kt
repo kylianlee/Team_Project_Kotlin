@@ -38,7 +38,7 @@ class MainFragment : Fragment() {
         myDBHelper.getMainMonthRecord(month)
     }
 
-    fun getMonthRecord(month:Int) {
+    fun getMonthRecord(month: Int) {
         myDBHelper.getMainMonthRecord(month.toString())
     }
 
@@ -97,7 +97,7 @@ class MainFragment : Fragment() {
             }
 
             calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
-                monthText.text = (month+1).toString() + "월 장학 목록"
+                monthText.text = (month + 1).toString() + "월 장학 목록"
                 selectMonth = month + 1
                 selectDay = dayOfMonth
                 getMonthRecord(selectMonth)

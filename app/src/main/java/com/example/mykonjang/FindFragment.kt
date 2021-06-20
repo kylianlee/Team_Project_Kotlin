@@ -15,7 +15,7 @@ class FindFragment : Fragment() {
     var binding: FragmentFindBinding? = null
     lateinit var myDBHelper: MyDBHelper
     val scholarTypes = arrayOf("전체", "교외", "교내")
-    val gradeTypes = arrayOf("2.0", "2.5", "3.0", "3.5", "4.0", "4.5")
+    val gradeTypes = arrayOf("전체", "2.0", "2.5", "3.0", "3.5", "4.0", "4.5")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

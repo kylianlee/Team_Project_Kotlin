@@ -269,10 +269,18 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
 
     // 장학 분류 Spinner 선택 함수
     fun selectScholarType(scholarItem: Any, gradeItem: Any): Boolean {
-        val strsql: String = if (scholarItem == "전체")
-            "select * from $TABLE_NAME where $PGRADE >= '$gradeItem';"
-        else
-            "select * from $TABLE_NAME where $PSCHOLARTYPE = '$scholarItem' and $PGRADE >= '$gradeItem';"
+        var strsql = ""
+        strsql = if (scholarItem == "전체") {
+            if(gradeItem == "전체")
+                "select * from $TABLE_NAME;"
+            else
+                "select * from $TABLE_NAME where $PGRADE >= '$gradeItem';"
+        } else {
+            if(gradeItem == "전체")
+                "select * from $TABLE_NAME where $PSCHOLARTYPE = '$scholarItem';"
+            else
+                "select * from $TABLE_NAME where $PSCHOLARTYPE = '$scholarItem' and $PGRADE >= '$gradeItem';"
+        }
 
         val db = readableDatabase
         val cursor = db.rawQuery(strsql, null)
