@@ -73,9 +73,7 @@ class MainFragment : Fragment() {
 
             // 우측 상단에 사용자 버튼 누르면 사용자 화면으로 이동
             userBtn.setOnClickListener {
-                val logInFragment = LogInFragment()
-                fragment.replace(R.id.framelayout, logInFragment)
-                fragment.commit()
+
             }
 
             monthText.text = month + "월 장학 목록"

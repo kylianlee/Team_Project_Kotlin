@@ -17,7 +17,7 @@ class MainListAdapter(private var items: MutableList<ScholarData>): RecyclerView
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.scholarList.text = items[position].scholarList
+        holder.scholarList.text = items[position].scholarName + " : " + items[position].scholarList
     }
 
     override fun getItemCount(): Int {

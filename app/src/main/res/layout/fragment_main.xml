@@ -73,6 +73,7 @@
             android:paddingRight="20dp"
             android:paddingLeft="20dp"
             android:paddingBottom="20dp">
+
             <CalendarView
                 android:id="@+id/calendarView"
                 android:layout_width="match_parent"
@@ -89,7 +90,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/RecyclerView1"
                 android:layout_width="match_parent"
-                android:layout_height="140dp" />
+                android:layout_height="120dp" />
 
             <TextView
                 android:id="@+id/listText"
@@ -97,13 +98,14 @@
                 android:layout_height="wrap_content"
                 android:text="Check List"
                 android:padding="5dp"
+                android:layout_marginTop="10dp"
                 android:textColor="@color/black"
                 android:textSize="20dp"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/RecyclerView2"
                 android:layout_width="match_parent"
-                android:layout_height="140dp" />
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 

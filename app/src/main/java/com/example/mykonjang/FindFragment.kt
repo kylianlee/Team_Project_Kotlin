@@ -30,7 +30,7 @@ class FindFragment : Fragment() {
         var scholarSelect = ""
         var gradeSelect = ""
         myDBHelper = MyDBHelper(this.context)
-        binding!!.apply{
+        binding!!.apply {
             scholarDiv?.adapter = this@FindFragment.context?.let {
                 ArrayAdapter(
                     it,
@@ -39,7 +39,7 @@ class FindFragment : Fragment() {
                 )
             } as SpinnerAdapter
 
-            scholarDiv.onItemSelectedListener = object :AdapterView.OnItemSelectedListener {
+            scholarDiv.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
                     view: View?,
@@ -47,7 +47,10 @@ class FindFragment : Fragment() {
                     id: Long
                 ) {
                     scholarSelect = scholarDiv.getItemAtPosition(position) as String
-                    myDBHelper.selectScholarType(scholarDiv.getItemAtPosition(position), gradeSelect)
+                    myDBHelper.selectScholarType(
+                        scholarDiv.getItemAtPosition(position),
+                        gradeSelect
+                    )
                     Toast.makeText(
                         this@FindFragment.context,
                         "선택 : " + scholarDiv.getItemAtPosition(position),
@@ -67,7 +70,7 @@ class FindFragment : Fragment() {
                 )
             } as SpinnerAdapter
 
-            gradeDiv.onItemSelectedListener = object :AdapterView.OnItemSelectedListener {
+            gradeDiv.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
                     view: View?,
@@ -75,7 +78,10 @@ class FindFragment : Fragment() {
                     id: Long
                 ) {
                     gradeSelect = gradeDiv.getItemAtPosition(position) as String
-                    myDBHelper.selectScholarType(scholarSelect, gradeDiv.getItemAtPosition(position))
+                    myDBHelper.selectScholarType(
+                        scholarSelect,
+                        gradeDiv.getItemAtPosition(position)
+                    )
                     Toast.makeText(
                         this@FindFragment.context,
                         "선택 : " + gradeDiv.getItemAtPosition(position),
@@ -91,10 +97,10 @@ class FindFragment : Fragment() {
                 val scholarName = findScholar.text.toString()
                 val result = myDBHelper.findScholar(scholarName)
                 if (result) {
-                    Toast.makeText(this@FindFragment.context, "RECORD FOUND", Toast.LENGTH_SHORT)
+                    Toast.makeText(this@FindFragment.context, "검색 완료", Toast.LENGTH_SHORT)
                         .show()
                 } else {
-                    Toast.makeText(this@FindFragment.context, "NO MATCH FOUND", Toast.LENGTH_SHORT)
+                    Toast.makeText(this@FindFragment.context, "검색 결과가 없습니다", Toast.LENGTH_SHORT)
                         .show()
                 }
             }

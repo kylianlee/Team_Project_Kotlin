@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.graphics.Color
+import android.text.Editable
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -14,6 +15,7 @@ import android.widget.TableRow
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+
 
 class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     lateinit var recyclerView: RecyclerView
@@ -286,7 +288,7 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
 
     /* MainFragment의 월별 리스트 표시 */
     fun getMainMonthRecord(month: String) {
-        val strsql = "select * from $TABLE_NAME order by $PID;"
+        val strsql = "select * from $TABLE_NAME order by $PSCHOLARMONTH;"
         val db = readableDatabase
         val cursor = db.rawQuery(strsql, null)
 
@@ -333,6 +335,21 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
 
         mainMonthAdapter = MainMonthAdapter(scData)
 
+        mainMonthAdapter.itemClickListener = object : MainMonthAdapter.OnItemClickListener {
+            override fun OnItemClick(
+                holder: MainMonthAdapter.ViewHolder,
+                view: View,
+                data: ScholarData,
+                position: Int
+            ) {
+//                val fragment = requireActivity().supportFragmentManager.beginTransaction()
+//                fragment.addToBackStack(null)
+//                val findfragment = ScholarFragment()
+//                fragment.replace(R.id.framelayout, findfragment)
+//                fragment.commit()
+            }
+        }
+
         recyclerView = activity2.binding?.RecyclerView1!!
         recyclerView.adapter = mainMonthAdapter
         recyclerView.layoutManager =
@@ -365,9 +382,9 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
                 for (i in 0 until attrcount) {
                     if (i % 7 == 6) {
                         var tmp = cursor.getString(i).split(".")
-                        if (tmp[0] == month && tmp[1] == day) {
-                            var tf = false
-                            tf = cursor.getString(i - 2) == "1"
+                        var tf = false
+                        tf = cursor.getString(i - 2) == "1"
+                        if (tmp[0] == month && tmp[1] == day && tf) {
                             scData.apply {
                                 add(
                                     ScholarData(
@@ -394,5 +411,45 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
         recyclerView.layoutManager =
             LinearLayoutManager(activity2.context, LinearLayoutManager.VERTICAL, false)
         mainListAdapter.notifyDataSetChanged()
+    }
+
+    /* 데이터 표시 */
+    fun getScholarRecord(scholarName: String) {
+        val strsql = "select * from $TABLE_NAME where $PSCHOLARNAME = '$scholarName';"
+        val db = readableDatabase
+        val cursor = db.rawQuery(strsql, null)
+
+        showScholarRecord(cursor)
+        cursor.close()
+        db.close()
+    }
+
+    fun showScholarRecord(cursor: Cursor) {
+        cursor.moveToFirst()
+        val attrcount = cursor.columnCount // 개수
+        val activity = context as MainActivity
+        val activity2 =
+            activity?.supportFragmentManager.findFragmentById(R.id.framelayout) as ScholarFragment
+
+        if (cursor.count != 0) {
+            do {
+                for (i in 0 until attrcount) {
+                    if (i % 7 == 6) {
+                        var tf = false
+                        val textView = TextView(activity) // textview 생성
+                        tf = cursor.getString(i - 2) == "1"
+                        textView.textSize = 13.0f
+                        textView.gravity = Gravity.CENTER
+                        activity2.binding?.pId?.text = cursor.getString(i-6).toInt() as Editable
+                        activity2.binding?.pScholarName?.text = cursor.getString(i-5) as Editable
+                        activity2.binding?.pScholarType?.text = cursor.getString(i-4) as Editable
+                        activity2.binding?.pScholarList?.text = cursor.getString(i-3) as Editable
+                        activity2.binding?.pLike?.text = tf as Editable
+                        activity2.binding?.pGrade?.text = cursor.getString(i-1).toFloat() as Editable
+                        activity2.binding?.pMonth?.text = cursor.getString(i) as Editable
+                    }
+                }
+            } while (cursor.moveToNext())
+        }
     }
 }
