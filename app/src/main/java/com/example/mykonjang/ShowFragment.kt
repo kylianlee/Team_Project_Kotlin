@@ -26,9 +26,12 @@ class ShowFragment : Fragment() {
 
             // showPanel 클릭하면 MainFragment로 이동
             showPanel.setOnClickListener {
-                val mainfragment = MainFragment()
-                fragment.replace(R.id.framelayout, mainfragment)
+                val logInFragment = LogInFragment()
+                fragment.replace(R.id.framelayout, logInFragment)
                 fragment.commit()
+//                val mainfragment = MainFragment()
+//                fragment.replace(R.id.framelayout, mainfragment)
+//                fragment.commit()
             }
 
             imageView.setOnClickListener {

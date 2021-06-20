@@ -44,6 +44,7 @@ class LogInFragment : Fragment() {
                     binding.pw.text.clear()
                 }
             }
+
             signup.setOnClickListener {
                 val signUpFragment = SignUpFragment()
                 fragment.replace(R.id.framelayout, signUpFragment)

@@ -85,15 +85,11 @@ class MainFragment : Fragment() {
 
             // 우측 상단에 사용자 버튼 누르면 사용자 화면으로 이동
             userBtn.setOnClickListener {
-                if (flagtf) {
-                    Toast.makeText(context, "로그아웃 됨", Toast.LENGTH_SHORT).show()
-                    flagtf = false
-                } else {
-                    flagtf = true
-                    val logInFragment = LogInFragment()
-                    fragment.replace(R.id.framelayout, logInFragment)
-                    fragment.commit()
-                }
+                Toast.makeText(context, "로그아웃 됨", Toast.LENGTH_SHORT).show()
+                flagtf = false
+                val showFragment = ShowFragment()
+                fragment.replace(R.id.framelayout, showFragment)
+                fragment.commit()
             }
 
             calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->

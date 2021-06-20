@@ -93,8 +93,8 @@ class SignUpFragment : Fragment() {
                                 "회원 가입 되었습니다.",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            val mainFragment = MainFragment()
-                            fragment.replace(R.id.framelayout, mainFragment)
+                            val loginFragment = LogInFragment()
+                            fragment.replace(R.id.framelayout, loginFragment)
                             fragment.commit()
                         } else {
                             Toast.makeText(
