@@ -65,7 +65,7 @@ class AuthDBHelper(val context: Context?):SQLiteOpenHelper(context, DB_NAME, nul
     override fun onCreate(db: SQLiteDatabase?) {
         val create_table = "create table if not exists $TABLE_NAME(" +
                 "$NUM integer primary key autoincrement, " +
-                "$ID text, "
+                "$ID text, " +
                 "$PASSWORD text, " +
                 "$GRADE real);"
         db!!.execSQL(create_table)
