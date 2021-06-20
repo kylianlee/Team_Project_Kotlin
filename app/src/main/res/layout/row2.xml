@@ -2,14 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <CheckBox
-        android:id="@+id/checkBox"
+    <LinearLayout
+        android:id="@+id/scholarRow"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_margin="10dp"
         android:background="#EBF2DE"
-        android:padding="20dp"
-        android:text="CheckBox" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/scholarText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="20dp"
+            android:text="TextView" />
+    </LinearLayout>
 </LinearLayout>

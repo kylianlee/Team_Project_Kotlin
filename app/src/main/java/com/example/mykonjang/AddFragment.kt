@@ -49,7 +49,7 @@ class AddFragment : Fragment() {
                 val scholarList = pScholarList.text.toString()
                 val like = pLike.isChecked
                 val grade = pGrade.text.toString().toFloat()
-                val month = pMonth.text.toString().toInt()
+                val month = pMonth.text.toString()
                 val scholardata =
                     ScholarData(0, scholarName, scholarType, scholarList, like, grade, month)
 
@@ -98,7 +98,7 @@ class AddFragment : Fragment() {
                 val scholarList = pScholarList.text.toString()
                 val like = pLike.isChecked
                 val grade = pGrade.text.toString().toFloat()
-                val month = pMonth.text.toString().toInt()
+                val month = pMonth.text.toString()
                 val scholardata =
                     ScholarData(pid, scholarName, scholarType, scholarList, like, grade, month)
 

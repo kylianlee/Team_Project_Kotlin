@@ -78,15 +78,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="300dp" />
 
+            <TextView
+                android:id="@+id/monthText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:padding="5dp"
+                android:textSize="20dp"/>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/RecyclerView1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="140dp" />
+
+            <TextView
+                android:id="@+id/listText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Check List"
+                android:padding="5dp"
+                android:textColor="@color/black"
+                android:textSize="20dp"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/RecyclerView2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="140dp" />
 
         </LinearLayout>
 

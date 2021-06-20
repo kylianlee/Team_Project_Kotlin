@@ -21,20 +21,33 @@ class MainFragment : Fragment() {
     ): View? {
         binding = FragmentMainBinding.inflate(layoutInflater, container, false)
         init()
-        getALLRecord()
+        getMonthRecord()
+        getListRecord()
         return binding!!.root
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    fun getALLRecord() {
+    fun getMonthRecord() {
         val cal = Calendar.getInstance()
-        val month = (cal.get(Calendar.MONTH)+1).toString()
+        val month = (cal.get(Calendar.MONTH) + 1).toString()
         myDBHelper.getMainMonthRecord(month)
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun getListRecord() {
+        val cal = Calendar.getInstance()
+        val month = (cal.get(Calendar.MONTH) + 1).toString()
+        val day = (cal.get(Calendar.DATE)).toString()
+        myDBHelper.getMainListRecord(month, day)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun init() {
-        myDBHelper = MyDBHelper(this.context)
+        val cal = Calendar.getInstance()
+        val month = (cal.get(Calendar.MONTH) + 1).toString()
         val fragment = requireActivity().supportFragmentManager.beginTransaction()
+
+        myDBHelper = MyDBHelper(this.context)
         fragment.addToBackStack(null)
         binding!!.apply {
             // 왼쪽 상단에 텍스트 클릭하면 메인으로 이동
@@ -45,7 +58,7 @@ class MainFragment : Fragment() {
             }
 
             // 왼쪽 상단에 아이콘 클릭하면 메인으로 이동
-            imageView4.setOnClickListener{
+            imageView4.setOnClickListener {
                 val showfragment = ShowFragment()
                 fragment.replace(R.id.framelayout, showfragment)
                 fragment.commit()
@@ -62,6 +75,8 @@ class MainFragment : Fragment() {
             userBtn.setOnClickListener {
 
             }
+
+            monthText.text = month + "월 장학 목록"
         }
     }
 

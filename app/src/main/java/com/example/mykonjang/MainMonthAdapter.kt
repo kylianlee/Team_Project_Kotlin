@@ -6,21 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class MainAdapter (private var items: MutableList<ScholarData>): RecyclerView.Adapter<MainAdapter.ViewHolder> () {
-    interface OnItemClickListener {
-        fun OnItemClick(holder: ViewHolder, view: View, data: ScholarData, position: Int)
-    }
-
-    var itemClickListener: OnItemClickListener? = null
-
+class MainMonthAdapter (private var items: MutableList<ScholarData>): RecyclerView.Adapter<MainMonthAdapter.ViewHolder> () {
     inner class ViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView!!) {
-        var findText: TextView = itemView!!.findViewById(R.id.monthLi)
-
-        init {
-            findText.setOnClickListener {
-                itemClickListener?.OnItemClick(this, it, items[adapterPosition], adapterPosition)
-            }
-        }
+        var monthText: TextView = itemView!!.findViewById(R.id.scholarMonth)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -29,7 +17,7 @@ class MainAdapter (private var items: MutableList<ScholarData>): RecyclerView.Ad
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.findText.text = items[position].scholarName
+        holder.monthText.text = items[position].scholarName
     }
 
     override fun getItemCount(): Int {

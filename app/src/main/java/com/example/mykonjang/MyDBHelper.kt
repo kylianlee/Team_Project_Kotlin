@@ -18,7 +18,8 @@ import androidx.recyclerview.widget.RecyclerView
 class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: FindAdapter
-    lateinit var mainAdapter: MainAdapter
+    lateinit var mainMonthAdapter: MainMonthAdapter
+    lateinit var mainListAdapter: MainListAdapter
 
     companion object { // 변수 선언
         val DB_NAME = "scholar.db" // db 이름
@@ -180,7 +181,7 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
                                     cursor.getString(i - 3),
                                     tf,
                                     cursor.getString(i - 1).toFloat(),
-                                    cursor.getString(i).toInt()
+                                    cursor.getString(i)
                                 )
                             )
                         }
@@ -238,7 +239,7 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
                 "$PSCHOLARLIST text, " +
                 "$PLIKE boolean, " +
                 "$PGRADE float, " +
-                "$PSCHOLARMONTH integer);"
+                "$PSCHOLARMONTH text);"
         db!!.execSQL(create_table) // null이 아니면 테이블 생성
     }
 
@@ -283,7 +284,7 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
         return flag
     }
 
-    /* 데이터 표시 */
+    /* MainFragment의 월별 리스트 표시 */
     fun getMainMonthRecord(month: String) {
         val strsql = "select * from $TABLE_NAME order by $PID;"
         val db = readableDatabase
@@ -294,7 +295,7 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
         db.close()
     }
 
-    /* MainFragment */
+    /* MainFragment 월별 리스트 RecyclerView */
     fun showMainMonthList(cursor: Cursor, month: String) {
         var scData = mutableListOf<ScholarData>()
         cursor.moveToFirst()
@@ -307,7 +308,8 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
             do {
                 for (i in 0 until attrcount) {
                     if (i % 7 == 6) {
-                        if (cursor.getString(i) == month) {
+                        var tmp = cursor.getString(i).split(".")
+                        if (tmp[0] == month) {
                             var tf = false
                             tf = cursor.getString(i - 2) == "1"
                             scData.apply {
@@ -319,7 +321,7 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
                                         cursor.getString(i - 3),
                                         tf,
                                         cursor.getString(i - 1).toFloat(),
-                                        cursor.getString(i).toInt()
+                                        cursor.getString(i)
                                     )
                                 )
                             }
@@ -329,23 +331,68 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
             } while (cursor.moveToNext())
         }
 
-        mainAdapter = MainAdapter(scData)
-
-        mainAdapter.itemClickListener = object : MainAdapter.OnItemClickListener {
-            override fun OnItemClick(
-                holder: MainAdapter.ViewHolder,
-                view: View,
-                data: ScholarData,
-                position: Int
-            ) {
-
-            }
-        }
+        mainMonthAdapter = MainMonthAdapter(scData)
 
         recyclerView = activity2.binding?.RecyclerView1!!
-        recyclerView.adapter = mainAdapter
+        recyclerView.adapter = mainMonthAdapter
         recyclerView.layoutManager =
             LinearLayoutManager(activity2.context, LinearLayoutManager.VERTICAL, false)
-        mainAdapter.notifyDataSetChanged()
+        mainMonthAdapter.notifyDataSetChanged()
+    }
+
+    /* MainFragment의 장학 리스트 표시 */
+    fun getMainListRecord(month: String, day: String) {
+        val strsql = "select * from $TABLE_NAME order by $PID;"
+        val db = readableDatabase
+        val cursor = db.rawQuery(strsql, null)
+
+        showMainList(cursor, month, day)
+        cursor.close()
+        db.close()
+    }
+
+    /* MainFragment 장학 리스트 RecyclerView */
+    fun showMainList(cursor: Cursor, month: String, day: String) {
+        var scData = mutableListOf<ScholarData>()
+        cursor.moveToFirst()
+        val attrcount = cursor.columnCount // 개수
+        val activity = context as MainActivity
+        val activity2 =
+            activity?.supportFragmentManager.findFragmentById(R.id.framelayout) as MainFragment
+
+        if (cursor.count != 0) {
+            do {
+                for (i in 0 until attrcount) {
+                    if (i % 7 == 6) {
+                        var tmp = cursor.getString(i).split(".")
+                        if (tmp[0] == month && tmp[1] == day) {
+                            var tf = false
+                            tf = cursor.getString(i - 2) == "1"
+                            scData.apply {
+                                add(
+                                    ScholarData(
+                                        cursor.getString(i - 6).toInt(),
+                                        cursor.getString(i - 5),
+                                        cursor.getString(i - 4),
+                                        cursor.getString(i - 3),
+                                        tf,
+                                        cursor.getString(i - 1).toFloat(),
+                                        cursor.getString(i)
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+            } while (cursor.moveToNext())
+        }
+
+        mainListAdapter = MainListAdapter(scData)
+
+        recyclerView = activity2.binding?.RecyclerView2!!
+        recyclerView.adapter = mainListAdapter
+        recyclerView.layoutManager =
+            LinearLayoutManager(activity2.context, LinearLayoutManager.VERTICAL, false)
+        mainListAdapter.notifyDataSetChanged()
     }
 }
