@@ -1,6 +1,7 @@
 package com.example.mykonjang
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -33,6 +34,7 @@ class LogInFragment : Fragment() {
             val user = arrayOf(idStr, pwStr)
             if(authDBHelper.isSignedUp(user)) {
                 myViewModel.setLiveData(true)
+                Log.i("tagtag", myViewModel.selectedNum.value.toString())
                 Toast.makeText(this.context, "로그인 되었습니다.", Toast.LENGTH_SHORT).show()
                 val mainFragment = MainFragment()
                 fragment.replace(R.id.framelayout, mainFragment)

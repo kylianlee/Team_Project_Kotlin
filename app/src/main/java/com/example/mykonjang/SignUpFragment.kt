@@ -56,7 +56,7 @@ class SignUpFragment : Fragment() {
                     Toast.makeText(this.context, "비밀번호의 길이를 확인하십시오.", Toast.LENGTH_SHORT).show()
                     binding.pw!!.text.clear()
                 }
-                else if(pw!! == pwCheck!!){
+                else if(pw!! != pwCheck!!){
                     Toast.makeText(this.context, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show()
                     binding.pw!!.text.clear()
                     binding.pwcheck!!.text.clear()

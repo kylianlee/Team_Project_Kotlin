@@ -3,6 +3,7 @@ package com.example.mykonjang
 import android.icu.util.Calendar
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,10 +17,10 @@ import com.example.mykonjang.databinding.FragmentMainBinding
 class MainFragment : Fragment() {
     var binding: FragmentMainBinding? = null
     lateinit var myDBHelper: MyDBHelper
-    var flag = false
     val myViewModel:MyViewModel by viewModels()
     var selectMonth = 0
     var selectDay = 0
+    var flag: Boolean?=null
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
@@ -27,6 +28,7 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMainBinding.inflate(layoutInflater, container, false)
+        flag = false
         init()
         getMonthRecord()
         getListRecord()
@@ -87,10 +89,13 @@ class MainFragment : Fragment() {
 
             // 우측 상단에 사용자 버튼 누르면 사용자 화면으로 이동
             userBtn.setOnClickListener {
-                myViewModel.selectedNum.observe(viewLifecycleOwner, Observer{
+
+                myViewModel.selectedNum.observe(viewLifecycleOwner, Observer{ it->
                     flag = it
                 })
-                if(flag){
+
+                Log.i("tag", flag.toString())
+                if(flag!!){
                     Toast.makeText(context, "로그아웃 됨", Toast.LENGTH_SHORT).show()
                 }
                 else {
