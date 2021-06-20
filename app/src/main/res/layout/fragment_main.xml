@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:background="#ADCA74"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:padding="5dp">
 
             <TextView
@@ -69,11 +69,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="30dp">
+            android:paddingTop="0dp"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
+            android:paddingBottom="20dp">
             <CalendarView
                 android:id="@+id/calendarView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="300dp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/RecyclerView1"

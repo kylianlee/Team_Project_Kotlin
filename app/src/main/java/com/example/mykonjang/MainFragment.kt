@@ -1,25 +1,39 @@
 package com.example.mykonjang
 
+import android.icu.util.Calendar
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.example.mykonjang.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
     var binding: FragmentMainBinding? = null
+    lateinit var myDBHelper: MyDBHelper
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMainBinding.inflate(layoutInflater, container, false)
         init()
+        getALLRecord()
         return binding!!.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun getALLRecord() {
+        val cal = Calendar.getInstance()
+        val month = (cal.get(Calendar.MONTH)+1).toString()
+        myDBHelper.getMainMonthRecord(month)
+    }
+
     private fun init() {
+        myDBHelper = MyDBHelper(this.context)
         val fragment = requireActivity().supportFragmentManager.beginTransaction()
         fragment.addToBackStack(null)
         binding!!.apply {

@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: FindAdapter
+    lateinit var mainAdapter: MainAdapter
 
     companion object { // 변수 선언
         val DB_NAME = "scholar.db" // db 이름
@@ -280,5 +281,71 @@ class MyDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, nul
         db.close()
 
         return flag
+    }
+
+    /* 데이터 표시 */
+    fun getMainMonthRecord(month: String) {
+        val strsql = "select * from $TABLE_NAME order by $PID;"
+        val db = readableDatabase
+        val cursor = db.rawQuery(strsql, null)
+
+        showMainMonthList(cursor, month)
+        cursor.close()
+        db.close()
+    }
+
+    /* MainFragment */
+    fun showMainMonthList(cursor: Cursor, month: String) {
+        var scData = mutableListOf<ScholarData>()
+        cursor.moveToFirst()
+        val attrcount = cursor.columnCount // 개수
+        val activity = context as MainActivity
+        val activity2 =
+            activity?.supportFragmentManager.findFragmentById(R.id.framelayout) as MainFragment
+
+        if (cursor.count != 0) {
+            do {
+                for (i in 0 until attrcount) {
+                    if (i % 7 == 6) {
+                        if (cursor.getString(i) == month) {
+                            var tf = false
+                            tf = cursor.getString(i - 2) == "1"
+                            scData.apply {
+                                add(
+                                    ScholarData(
+                                        cursor.getString(i - 6).toInt(),
+                                        cursor.getString(i - 5),
+                                        cursor.getString(i - 4),
+                                        cursor.getString(i - 3),
+                                        tf,
+                                        cursor.getString(i - 1).toFloat(),
+                                        cursor.getString(i).toInt()
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+            } while (cursor.moveToNext())
+        }
+
+        mainAdapter = MainAdapter(scData)
+
+        mainAdapter.itemClickListener = object : MainAdapter.OnItemClickListener {
+            override fun OnItemClick(
+                holder: MainAdapter.ViewHolder,
+                view: View,
+                data: ScholarData,
+                position: Int
+            ) {
+
+            }
+        }
+
+        recyclerView = activity2.binding?.RecyclerView1!!
+        recyclerView.adapter = mainAdapter
+        recyclerView.layoutManager =
+            LinearLayoutManager(activity2.context, LinearLayoutManager.VERTICAL, false)
+        mainAdapter.notifyDataSetChanged()
     }
 }
