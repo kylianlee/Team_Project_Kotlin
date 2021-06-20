@@ -92,18 +92,20 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="장학 분류"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:layout_marginLeft="10dp"
+                    android:layout_weight="2"
                     android:gravity="center_vertical"/>
                 <Spinner
                     android:id="@+id/scholarDiv"
-                    android:layout_width="100dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:layout_centerHorizontal="true"
                     android:gravity="center"/>
 
@@ -115,18 +117,20 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="성적"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:layout_marginLeft="10dp"
+                    android:layout_weight="2"
                     android:gravity="center_vertical"/>
                 <Spinner
                     android:id="@+id/gradeDiv"
-                    android:layout_width="100dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:layout_centerHorizontal="true"
                     android:gravity="center"/>
 

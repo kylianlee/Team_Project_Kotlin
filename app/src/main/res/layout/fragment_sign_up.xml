@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".FindFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="#ADCA74"
+            android:layout_marginBottom="20dp"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/mainText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:text="건장이"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/white"
+                android:textSize="36sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="2dp"
+                android:layout_marginLeft="2dp"
+                android:rotation="21"
+                android:src="@drawable/scholar" />
+        </LinearLayout>
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="50dp"
+                android:layout_marginLeft="70dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="id 입력"
+                    android:textSize="15sp"
+                    android:layout_marginRight="15dp"/>
+                <EditText
+                    android:id="@+id/id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="8자 이상 14자 이하"
+                    android:layout_marginRight="10dp"
+                    android:textSize="15sp"
+                    android:ems="8"/>
+                <Button
+                    android:id="@+id/btnId"
+                    android:layout_width="170px"
+                    android:layout_height="100px"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:padding="1dp"
+                    android:text="중복확인"
+                    android:textSize="8sp"
+                    app:backgroundTint="#8BC34A" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="50dp"
+                android:layout_marginLeft="25dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="비밀번호 입력"
+                    android:textSize="15sp"
+                    android:layout_marginRight="15dp"/>
+                <EditText
+                    android:id="@+id/pw"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="8자 이상 14자 이하"
+                    android:textSize="15sp"
+                    android:inputType="textPassword"
+                    android:ems="8"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="50dp"
+                android:layout_marginLeft="52dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="평점 입력"
+                    android:textSize="15sp"
+                    android:layout_marginRight="15dp"/>
+                <EditText
+                    android:id="@+id/score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="소수점 첫째자리까지 입력"
+                    android:textSize="15sp"
+                    android:ems="10"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="50dp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:padding="5dp"
+                android:text="등록"
+                app:backgroundTint="#8BC34A" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>
