@@ -28,6 +28,7 @@ class SignUpFragment : Fragment() {
         var flag1 = false
         var id:String?
         var pw:String?
+        var pwCheck:String?
         var score:Double?
 
         binding.btnId.setOnClickListener {
@@ -46,6 +47,7 @@ class SignUpFragment : Fragment() {
         binding.btn.setOnClickListener {
             id = binding.id!!.text.toString()
             pw = binding.pw!!.text.toString()
+            pwCheck = binding.pw!!.text.toString()
             score = binding.score!!.text.toString().toDouble()
             if(!flag1)
                 Toast.makeText(this.context, "아이디 중복확인을 하십시오.", Toast.LENGTH_SHORT).show()
@@ -53,6 +55,11 @@ class SignUpFragment : Fragment() {
                 if(pw!!.length < 8 || pw!!.length > 14){
                     Toast.makeText(this.context, "비밀번호의 길이를 확인하십시오.", Toast.LENGTH_SHORT).show()
                     binding.pw!!.text.clear()
+                }
+                else if(pw!! == pwCheck!!){
+                    Toast.makeText(this.context, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show()
+                    binding.pw!!.text.clear()
+                    binding.pwcheck!!.text.clear()
                 }
                 else{
                     val user = AuthData(0, id!!, pw!!, score!!)

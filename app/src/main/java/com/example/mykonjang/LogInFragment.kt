@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import com.example.mykonjang.databinding.FragmentLogInBinding
 
 class LogInFragment : Fragment() {
     lateinit var binding:FragmentLogInBinding
     lateinit var authDBHelper: AuthDBHelper
+    val myViewModel:MyViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,6 +32,7 @@ class LogInFragment : Fragment() {
             val pwStr = binding.pw.text.toString()
             val user = arrayOf(idStr, pwStr)
             if(authDBHelper.isSignedUp(user)) {
+                myViewModel.setLiveData(true)
                 Toast.makeText(this.context, "로그인 되었습니다.", Toast.LENGTH_SHORT).show()
                 val mainFragment = MainFragment()
                 fragment.replace(R.id.framelayout, mainFragment)
